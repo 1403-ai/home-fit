@@ -6,6 +6,7 @@ React, NestJS, MongoDB, Nginx, Docker Compose 배포 환경을 확인하기 위�
 
 - Web: Vite + React + TypeScript
 - API: NestJS + MongoDB health check
+- Worker: NestJS application context + scheduler scaffold
 - Infra: Docker Compose + Nginx
 - Local Docker Runtime: Colima
 - CD: GitHub Actions to EC2
@@ -65,10 +66,12 @@ docker compose ps
 
 - `home-fit-ai-mongo-1`
 - `home-fit-ai-api-1`
+- `home-fit-ai-worker-1`
 - `home-fit-ai-web-1`
 - `home-fit-ai-nginx-1`
 
 MongoDB는 `healthy`로 표시되면 정상입니다.
+Worker는 HTTP 포트를 열지 않고, 크롤링/분석 같은 백그라운드 작업을 처리하기 위한 프로세스로 실행됩니다.
 
 ### 접속 확인
 
@@ -76,11 +79,35 @@ MongoDB는 `healthy`로 표시되면 정상입니다.
 
 - Web: http://localhost
 - API health: http://localhost/api/health
+- Worker 수동 트리거: `POST http://localhost/api/worker/trigger`
 
 터미널에서 확인:
 
 ```bash
 curl http://localhost/api/health
+```
+
+Worker 수동 트리거:
+
+```bash
+curl -X POST http://localhost/api/worker/trigger
+```
+
+정상 응답 예시:
+
+```json
+{
+  "job": {
+    "source": "manual",
+    "status": "success",
+    "mongo": {
+      "connected": true,
+      "readyState": 1,
+      "database": "homefit"
+    },
+    "message": "Worker manual trigger executed"
+  }
+}
 ```
 
 정상 응답 예시:
@@ -104,6 +131,7 @@ curl http://localhost/api/health
 - `/api/health` 응답의 `status`가 `ok`입니다.
 - `/api/health` 응답의 `mongo.connected`가 `true`입니다.
 - `/api/health` 응답의 `mongo.readyState`가 `1`입니다.
+- `POST /api/worker/trigger` 응답의 `job.status`가 `success`입니다.
 
 ## 재실행 방법
 
@@ -144,6 +172,20 @@ MongoDB 로그:
 docker compose logs -f mongo
 ```
 
+Worker 로그:
+
+```bash
+docker compose logs -f worker
+```
+
+Worker가 정상 실행되면 아래와 비슷한 로그가 보입니다.
+
+```text
+Worker application context started
+Worker is ready for scheduled crawling and analysis jobs
+MongoDB connected (readyState=1, database=homefit)
+```
+
 ## 로컬 데이터 초기화
 
 MongoDB 데이터를 포함해서 완전히 초기화하려면 volume까지 삭제합니다.
@@ -178,6 +220,7 @@ Colima를 중지해도 Docker volume은 삭제되지 않습니다. `docker compo
 docker compose config
 docker compose ps
 docker compose logs -f api
+docker compose logs -f worker
 docker volume ls
 ```
 

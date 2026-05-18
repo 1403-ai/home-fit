@@ -22,9 +22,11 @@ services:
       retries: 10
 
   api:
+    image: home-fit-ai-api:local
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+    command: npm run start:prod
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV}
@@ -35,6 +37,18 @@ services:
         condition: service_healthy
     expose:
       - "3000"
+
+  worker:
+    image: home-fit-ai-api:local
+    pull_policy: never
+    command: npm run start:worker
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      MONGO_URI: ${MONGO_URI}
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   web:
     build:
@@ -55,6 +69,7 @@ services:
     restart: unless-stopped
     depends_on:
       - api
+      - worker
       - web
     ports:
       - "${NGINX_HTTP_PORT}:80"
