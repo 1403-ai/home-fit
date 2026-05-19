@@ -56,6 +56,7 @@ jobs:
           push: true
           build-args: |
             VITE_API_BASE_URL=/api
+            NGINX_CONF=default.prod.conf
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/home-fit-ai-nginx:${{ env.IMAGE_TAG }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/home-fit-ai-nginx:latest
@@ -67,16 +68,16 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          script: mkdir -p ~/home-fit-ai/infra/nginx
+          script: mkdir -p ~/home-fit-ai
 
-      # 3. 도커 컴포즈 및 Nginx 설정 파일을 EC2 '배포 실행 전'에 업로드하도록 보정
+      # 3. 도커 컴포즈 파일 업로드
       - name: Upload deployment files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "docker-compose.prod.yml,infra/nginx/default.prod.conf"
+          source: "docker-compose.prod.yml"
           target: "~/home-fit-ai"
 
       # 4. EC2 원격 접속 후 배포 명령어 실행

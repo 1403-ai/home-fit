@@ -12,5 +12,9 @@ COPY apps/web ./apps/web
 RUN npm --workspace apps/web run build
 
 FROM nginx:1.27-alpine
-COPY infra/nginx/default.conf /etc/nginx/conf.d/default.conf
+ARG NGINX_CONF=default.conf
+COPY infra/nginx/default.conf /tmp/default.conf
+COPY infra/nginx/default.prod.conf /tmp/default.prod.conf
+RUN cp "/tmp/${NGINX_CONF}" /etc/nginx/conf.d/default.conf \
+  && rm /tmp/default.conf /tmp/default.prod.conf
 COPY --from=web-build /app/apps/web/dist /usr/share/nginx/html
