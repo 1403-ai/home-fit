@@ -50,27 +50,16 @@ services:
       mongo:
         condition: service_healthy
 
-  web:
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-    restart: unless-stopped
-    environment:
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-    expose:
-      - "4173"
-
   nginx:
     build:
       context: .
       dockerfile: infra/nginx/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
     restart: unless-stopped
     depends_on:
       - api
       - worker
-      - web
     ports:
       - "${NGINX_HTTP_PORT}:80"
 

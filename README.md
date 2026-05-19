@@ -67,11 +67,11 @@ docker compose ps
 - `home-fit-ai-mongo-1`
 - `home-fit-ai-api-1`
 - `home-fit-ai-worker-1`
-- `home-fit-ai-web-1`
 - `home-fit-ai-nginx-1`
 
 MongoDB는 `healthy`로 표시되면 정상입니다.
 Worker는 HTTP 포트를 열지 않고, 크롤링/분석 같은 백그라운드 작업을 처리하기 위한 프로세스로 실행됩니다.
+Web 정적 파일은 별도 web 컨테이너 없이 Nginx 컨테이너에서 직접 서빙됩니다.
 
 ### 접속 확인
 
