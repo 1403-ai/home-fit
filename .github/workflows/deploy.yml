@@ -93,34 +93,33 @@ jobs:
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           GHCR_USER: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+          DOCDB_USERNAME: ${{ secrets.DOCDB_USERNAME }}
+          DOCDB_PASSWORD: ${{ secrets.DOCDB_PASSWORD }}
+          DOCDB_ENDPOINT: ${{ secrets.DOCDB_ENDPOINT }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: IMAGE_REGISTRY,IMAGE_OWNER,IMAGE_TAG,GHCR_USER,GHCR_TOKEN,MONGO_INITDB_ROOT_USERNAME,MONGO_INITDB_ROOT_PASSWORD
+          envs: IMAGE_REGISTRY,IMAGE_OWNER,IMAGE_TAG,GHCR_USER,GHCR_TOKEN,DOCDB_USERNAME,DOCDB_PASSWORD,DOCDB_ENDPOINT
           script: |
             set -e
             # 신규 EC2 에서도 자동 GHCR 인증 (private 이미지 pull 가능)
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             cd ~/home-fit-ai
             
-            # .env 파일 동적 생성
+            # DocumentDB TLS CA 인증서 다운로드
+            curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o global-bundle.pem
+
+            # .env 파일 동적 생성 (DocumentDB 사용)
             cat > .env <<EOF
             NODE_ENV=production
             IMAGE_REGISTRY=$IMAGE_REGISTRY
             IMAGE_OWNER=$IMAGE_OWNER
             IMAGE_TAG=$IMAGE_TAG
-            MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
-            MONGO_INITDB_ROOT_PASSWORD=placeholder_password
-            MONGO_DATABASE=homefit
+            MONGO_URI=mongodb://$DOCDB_USERNAME:$DOCDB_PASSWORD@$DOCDB_ENDPOINT:27017/homefit?tls=true&tlsCAFile=/app/global-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false&authMechanism=SCRAM-SHA-1
             PORT=3000
             NGINX_HTTP_PORT=80
             EOF
-
-            # 기존 코드의 오타 정정 및 패스워드 주입 보정
-            sed -i "s/MONGO_INITDB_ROOT_PASSWORD=.*/MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD/g" .env
 
             # 최신 이미지 Pull 및 컨테이너 무중단 재실행 지향
             docker compose -f docker-compose.prod.yml pull
