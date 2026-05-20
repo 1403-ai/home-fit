@@ -100,7 +100,7 @@ home-fit-documents/
 1. EventBridge가 12시간마다 Lambda 트리거
 2. SH 공고 게시판 목록 페이지 크롤링 (기본 최신 5페이지/50건, `CRAWL_MAX_LIST_PAGES`로 확장 가능)
 3. 목록의 `getDetailView(seq)` 값을 이용해 상세 페이지를 POST 요청
-4. 상세 HTML의 `initParam.downList`에서 PDF 첨부파일 URL 추출
+4. 상세 HTML의 `initParam.downList`에서 PDF 첨부파일 URL 추출 (`모집공고`/`모집 공고` 파일명만 대상)
 5. S3에서 기존 PDF 조회 (중복 감지)
 6. PDF 다운로드 → S3 업로드
 7. Lambda 잔여 시간이 부족하면 다음 공고 처리를 시작하지 않고 안전 종료
