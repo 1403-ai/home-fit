@@ -1,6 +1,6 @@
 /** 게시판에서 추출한 공고 요약 정보 */
 export interface AnnouncementEntry {
-  /** 게시글 고유 번호 (nttId) */
+  /** 게시글 상세 식별자 (SH 게시판의 seq 값) */
   nttId: string;
   /** 공고 제목 */
   title: string;
@@ -8,6 +8,12 @@ export interface AnnouncementEntry {
   department: string;
   /** 등록일 (YYYY-MM-DD) */
   date: string;
+  /** 목록에 표시되는 게시글 번호 */
+  noticeNo?: string;
+  /** 상세 페이지 URL */
+  detailUrl?: string;
+  /** 수집한 목록 페이지 번호 */
+  sourcePage?: number;
 }
 
 /** 공고 상세에서 추출한 첨부파일 정보 */
@@ -16,6 +22,8 @@ export interface AttachmentInfo {
   fileName: string;
   /** 다운로드 URL */
   downloadUrl: string;
+  /** 원본 파일 크기(bytes) */
+  fileSize?: number;
 }
 
 /** 공고 상세 정보 (첨부파일 포함) */

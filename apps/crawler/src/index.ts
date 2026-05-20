@@ -15,13 +15,15 @@ import type { CrawlResult, UploadResult } from './types.js';
  */
 export async function handler(
   _event: ScheduledEvent,
-  _context: Context
+  context: Context
 ): Promise<CrawlResult> {
   console.log('[handler] SH Crawler Lambda started');
   const startTime = Date.now();
+  const deadlineMs = getDeadlineMs(startTime, context);
+  const shouldContinue = () => hasEnoughTime(deadlineMs);
 
   // 1. 공고 목록 크롤링
-  const announcements = await fetchAnnouncementList();
+  const announcements = await fetchAnnouncementList({ deadlineMs });
   console.log(`[handler] Total announcements from list: ${announcements.length}`);
 
   if (announcements.length === 0) {
@@ -42,6 +44,13 @@ export async function handler(
   let newCount = 0;
 
   for (const entry of announcements) {
+    if (!shouldContinue()) {
+      console.warn(
+        `[handler] Stop before nttId=${entry.nttId}: not enough Lambda time remains`
+      );
+      break;
+    }
+
     try {
       const detail = await fetchAnnouncementDetail(entry.nttId);
 
@@ -50,7 +59,7 @@ export async function handler(
         continue;
       }
 
-      const results = await downloadAndUpload(detail);
+      const results = await downloadAndUpload(detail, { shouldContinue });
       if (results.length > 0) {
         newCount++;
       }
@@ -87,4 +96,20 @@ export async function handler(
     details: allResults,
     executedAt: new Date().toISOString(),
   };
+}
+
+function getDeadlineMs(startTime: number, context: Context): number {
+  const lambdaRemainingMs =
+    typeof context.getRemainingTimeInMillis === 'function'
+      ? context.getRemainingTimeInMillis()
+      : 15 * 60 * 1000;
+  const hardLimitMs = 15 * 60 * 1000;
+  const safetyBufferMs = Number(process.env.LAMBDA_SAFETY_BUFFER_MS ?? 30_000);
+
+  return startTime + Math.min(lambdaRemainingMs, hardLimitMs) - safetyBufferMs;
+}
+
+function hasEnoughTime(deadlineMs: number): boolean {
+  const minRemainingMs = Number(process.env.LAMBDA_MIN_REMAINING_MS ?? 60_000);
+  return deadlineMs - Date.now() > minRemainingMs;
 }
