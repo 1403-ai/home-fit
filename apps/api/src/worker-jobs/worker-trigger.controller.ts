@@ -1,14 +1,13 @@
 import { Controller, Post } from '@nestjs/common';
-import { WorkerJobsService } from './worker-jobs.service';
+import { CrawlerService } from '../crawler/crawler.service';
 
 @Controller('worker')
 export class WorkerTriggerController {
-  constructor(private readonly workerJobsService: WorkerJobsService) {}
+  constructor(private readonly crawlerService: CrawlerService) {}
 
   @Post('trigger')
   async trigger() {
-    return {
-      job: await this.workerJobsService.run('manual')
-    };
+    const result = await this.crawlerService.crawl('manual');
+    return { job: result };
   }
 }
