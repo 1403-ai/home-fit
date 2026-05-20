@@ -31,3 +31,42 @@ output "github_secrets_hint" {
     EC2_SSH_KEY = "(cat ${local_sensitive_file.private_key.filename})"
   }
 }
+
+# =============================================================================
+# PDF Pipeline Infrastructure Outputs
+# =============================================================================
+
+output "docdb_endpoint" {
+  description = "DocumentDB cluster endpoint"
+  value       = aws_docdb_cluster.main.endpoint
+}
+
+output "docdb_port" {
+  description = "DocumentDB cluster port"
+  value       = aws_docdb_cluster.main.port
+}
+
+output "s3_bucket_name" {
+  description = "S3 bucket name for PDF documents"
+  value       = aws_s3_bucket.documents.id
+}
+
+output "s3_bucket_arn" {
+  description = "S3 bucket ARN"
+  value       = aws_s3_bucket.documents.arn
+}
+
+output "lambda_function_arn" {
+  description = "PDF analyzer Lambda function ARN"
+  value       = aws_lambda_function.pdf_analyzer.arn
+}
+
+output "lambda_function_name" {
+  description = "PDF analyzer Lambda function name"
+  value       = aws_lambda_function.pdf_analyzer.function_name
+}
+
+output "nat_gateway_ip" {
+  description = "NAT Gateway public IP"
+  value       = aws_eip.nat.public_ip
+}

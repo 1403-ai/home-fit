@@ -13,7 +13,17 @@ import { MongooseModule } from '@nestjs/mongoose';
           throw new Error('MONGO_URI is required');
         }
 
-        return { uri };
+        return {
+          uri,
+          tls: uri.includes('docdb.amazonaws.com'),
+          tlsCAFile: uri.includes('docdb.amazonaws.com')
+            ? '/app/global-bundle.pem'
+            : undefined,
+          retryWrites: false,
+          authMechanism: uri.includes('docdb.amazonaws.com')
+            ? 'SCRAM-SHA-1'
+            : undefined
+        };
       }
     })
   ],
