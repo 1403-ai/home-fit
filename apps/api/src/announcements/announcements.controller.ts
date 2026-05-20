@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AnnouncementsService } from './announcements.service';
 
@@ -28,5 +28,11 @@ export class AnnouncementsController {
   @ApiOperation({ summary: '공고 상세 조회' })
   async findOne(@Param('seq') seq: string) {
     return this.announcementsService.findBySeq(seq);
+  }
+
+  @Delete(':seq')
+  @ApiOperation({ summary: '공고 삭제' })
+  async remove(@Param('seq') seq: string) {
+    return this.announcementsService.removeBySeq(seq);
   }
 }

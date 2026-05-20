@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Announcement, AnnouncementDocument } from './announcement.schema';
@@ -30,5 +30,13 @@ export class AnnouncementsService {
 
   async findBySeq(seq: string) {
     return this.announcementModel.findOne({ seq }).lean().exec();
+  }
+
+  async removeBySeq(seq: string) {
+    const result = await this.announcementModel.deleteOne({ seq }).exec();
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`공고 seq="${seq}"를 찾을 수 없습니다.`);
+    }
+    return { deleted: true, seq };
   }
 }
