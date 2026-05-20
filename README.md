@@ -1,4 +1,4 @@
-# Home Fit AI
+# Home Fit
 
 서울주택도시공사(SH) 임대/분양 공고를 자동 수집·분석하여, 사용자 맞춤형 Q&A 기반 주거 정보를 제공하는 서비스입니다.
 
@@ -9,7 +9,7 @@
 ## 서비스 개요
 
 1. **크롤러**가 SH 공고 게시판에서 PDF를 자동 수집하여 S3에 저장
-2. **PDF 분석기**가 Bedrock Claude를 활용해 공고 내용을 구조화된 Q&A 데이터로 변환
+2. **PDF 분석기**가 Bedrock Claude Sonnet을 활용해 공고 내용을 구조화된 Q&A 데이터로 변환
 3. **API 서버**가 분석된 데이터를 사용자에게 제공
 4. **웹 앱**에서 온보딩 → 공고 목록 → Q&A 형태로 사용자에게 맞춤 정보 전달
 
@@ -37,7 +37,7 @@
 ## 프로젝트 구조
 
 ```
-home-fit-ai/
+home-fit/
 ├── apps/
 │   ├── api/                  # NestJS REST API + Worker
 │   │   ├── src/
@@ -109,7 +109,7 @@ graph TB
             EB["EventBridge<br/>Scheduler (12h)"]
             LambdaCrawler["Lambda: Crawler<br/>Node.js 20 / arm64 / 1024MB"]
             S3[("S3 Bucket<br/>home-fit-documents<br/>announcements/ | raw-pdfs/")]
-            Bedrock["Amazon Bedrock<br/>Claude Opus 4"]
+            Bedrock["Amazon Bedrock<br/>Claude Sonnet 4.6"]
             CW["CloudWatch Logs"]
         end
 
@@ -165,7 +165,7 @@ graph TB
 ```
 ① EventBridge (12h 주기) → Crawler Lambda → SH 웹사이트 크롤링 → PDF 다운로드 → S3 업로드
 ② S3 Event Notification (.pdf 업로드 감지) → PDF Analyzer Lambda 트리거
-③ PDF Analyzer Lambda → S3에서 PDF 다운로드 → NAT GW → Bedrock Claude Opus 4 (분석 요청)
+③ PDF Analyzer Lambda → S3에서 PDF 다운로드 → NAT GW → Bedrock Claude Sonnet 4.6 (분석 요청)
 ④ Bedrock 분석 결과 → Lambda → DocumentDB 저장 (Q&A 상태 머신, 공고 정보, 용어 사전)
 ⑤ EC2 (API Server) → DocumentDB 조회 → 사용자에게 API 응답
 ⑥ 사용자 → Nginx (HTTPS) → API Server / 정적 파일 서빙
@@ -180,7 +180,7 @@ graph TB
 | **S3** | PDF 문서 저장소 | `home-fit-documents`, SSE-S3 암호화 |
 | **Lambda (Crawler)** | SH 공고 PDF 자동 수집 | Node.js 20, arm64, 1024MB, 15min |
 | **Lambda (PDF Analyzer)** | PDF → 구조화 데이터 변환 | Node.js 20, 1024MB, 15min, VPC 내부 |
-| **Amazon Bedrock** | AI 기반 PDF 문서 분석 | Claude Opus 4 |
+| **Amazon Bedrock** | AI 기반 PDF 문서 분석 | Claude Sonnet 4.6 |
 | **EventBridge** | 크롤러 스케줄링 | 12시간 주기 |
 | **NAT Gateway** | Lambda 인터넷 접근 | Bedrock API 호출용 |
 | **VPC** | 네트워크 격리 | Default VPC + Private Subnets |
@@ -203,22 +203,7 @@ brew install colima docker docker-compose
 colima start
 ```
 
-### 2. 환경변수 설정
-
-프로젝트 루트에 `.env` 파일을 생성합니다:
-
-```env
-NODE_ENV=development
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=password
-MONGO_DATABASE=homefit
-MONGO_URI=mongodb://admin:password@mongo:27017/homefit?authSource=admin
-PORT=3000
-NGINX_HTTP_PORT=80
-VITE_API_BASE_URL=/api
-```
-
-### 3. 실행
+### 2. 실행
 
 ```bash
 # 전체 서비스 빌드 및 실행
@@ -228,7 +213,7 @@ docker compose up -d --build
 npm run dev
 ```
 
-### 4. 접속 확인
+### 3. 접속 확인
 
 | URL | 설명 |
 |-----|------|
@@ -283,17 +268,6 @@ npm run test
 1. Docker 이미지 빌드 (multi-arch: amd64 + arm64)
 2. GHCR에 이미지 Push
 3. EC2에 SSH 접속하여 `docker-compose.prod.yml`로 배포
-
-### GitHub Actions Secrets
-
-| Secret | 설명 |
-|--------|------|
-| `EC2_HOST` | EC2 퍼블릭 IP |
-| `EC2_USER` | SSH 사용자 (ec2-user) |
-| `EC2_SSH_KEY` | EC2 SSH 프라이빗 키 |
-| `DOCDB_USERNAME` | DocumentDB 마스터 사용자명 |
-| `DOCDB_PASSWORD` | DocumentDB 마스터 비밀번호 |
-| `DOCDB_ENDPOINT` | DocumentDB 클러스터 엔드포인트 |
 
 ### 수동 배포
 
