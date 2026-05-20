@@ -74,6 +74,38 @@ variable "lambda_timeout" {
   default     = 900
 }
 
+# --- Crawler Lambda ---
+
+variable "crawler_lambda_function_name" {
+  description = "SH crawler Lambda function name"
+  type        = string
+  default     = "home-fit-ai"
+}
+
+variable "crawler_lambda_memory_size" {
+  description = "Crawler Lambda function memory in MB"
+  type        = number
+  default     = 1024
+}
+
+variable "crawler_lambda_timeout" {
+  description = "Crawler Lambda function timeout in seconds"
+  type        = number
+  default     = 900
+}
+
+variable "crawler_schedule_expression" {
+  description = "EventBridge schedule expression for the crawler Lambda"
+  type        = string
+  default     = "rate(12 hours)"
+}
+
+variable "crawler_max_list_pages" {
+  description = "Number of SH announcement list pages to crawl, or all"
+  type        = string
+  default     = "5"
+}
+
 # --- DocumentDB ---
 
 variable "docdb_master_username" {

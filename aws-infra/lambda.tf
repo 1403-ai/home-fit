@@ -187,3 +187,141 @@ resource "aws_lambda_function" "pdf_analyzer" {
     aws_nat_gateway.main
   ]
 }
+
+# =============================================================================
+# Lambda Function - SH Crawler
+# Triggered by EventBridge, crawls SH announcements, uploads PDFs to S3
+# =============================================================================
+
+# --- IAM Role ---
+
+resource "aws_iam_role" "crawler_lambda" {
+  name = "${var.crawler_lambda_function_name}-lambda-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name = "${var.crawler_lambda_function_name}-lambda-role"
+  }
+}
+
+# --- IAM Policy: S3 Read/Write ---
+
+resource "aws_iam_role_policy" "crawler_s3" {
+  name = "${var.crawler_lambda_function_name}-s3"
+  role = aws_iam_role.crawler_lambda.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket"
+        ]
+        Resource = aws_s3_bucket.documents.arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject"
+        ]
+        Resource = "${aws_s3_bucket.documents.arn}/*"
+      }
+    ]
+  })
+}
+
+# --- IAM Policy: CloudWatch Logs ---
+
+resource "aws_iam_role_policy_attachment" "crawler_basic" {
+  role       = aws_iam_role.crawler_lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# --- CloudWatch Log Group ---
+
+resource "aws_cloudwatch_log_group" "crawler" {
+  name              = "/aws/lambda/${var.crawler_lambda_function_name}"
+  retention_in_days = 14
+
+  tags = {
+    Name = "${var.crawler_lambda_function_name}-logs"
+  }
+}
+
+# --- Lambda Function ---
+
+resource "aws_lambda_function" "crawler" {
+  function_name = var.crawler_lambda_function_name
+  role          = aws_iam_role.crawler_lambda.arn
+  handler       = "index.handler"
+  runtime       = "nodejs20.x"
+  architectures = ["arm64"]
+  timeout       = var.crawler_lambda_timeout
+  memory_size   = var.crawler_lambda_memory_size
+
+  filename         = data.archive_file.lambda_placeholder.output_path
+  source_code_hash = data.archive_file.lambda_placeholder.output_base64sha256
+
+  environment {
+    variables = {
+      NODE_ENV             = "production"
+      S3_BUCKET_NAME       = aws_s3_bucket.documents.id
+      CRAWL_MAX_LIST_PAGES = var.crawler_max_list_pages
+    }
+  }
+
+  tags = {
+    Name = var.crawler_lambda_function_name
+  }
+
+  depends_on = [
+    aws_iam_role_policy.crawler_s3,
+    aws_iam_role_policy_attachment.crawler_basic,
+    aws_cloudwatch_log_group.crawler
+  ]
+}
+
+# --- EventBridge Schedule ---
+
+resource "aws_cloudwatch_event_rule" "crawler_schedule" {
+  name                = "${var.crawler_lambda_function_name}-schedule"
+  description         = "Run SH crawler Lambda on a schedule"
+  schedule_expression = var.crawler_schedule_expression
+  state               = "ENABLED"
+
+  tags = {
+    Name = "${var.crawler_lambda_function_name}-schedule"
+  }
+}
+
+resource "aws_cloudwatch_event_target" "crawler" {
+  rule      = aws_cloudwatch_event_rule.crawler_schedule.name
+  target_id = "crawler-lambda"
+  arn       = aws_lambda_function.crawler.arn
+
+  retry_policy {
+    maximum_retry_attempts = 2
+  }
+}
+
+resource "aws_lambda_permission" "crawler_eventbridge" {
+  statement_id  = "AllowEventBridgeInvokeCrawler"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.crawler.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.crawler_schedule.arn
+}

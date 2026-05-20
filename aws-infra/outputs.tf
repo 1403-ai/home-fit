@@ -66,6 +66,21 @@ output "lambda_function_name" {
   value       = aws_lambda_function.pdf_analyzer.function_name
 }
 
+output "crawler_lambda_function_arn" {
+  description = "Crawler Lambda function ARN"
+  value       = aws_lambda_function.crawler.arn
+}
+
+output "crawler_lambda_function_name" {
+  description = "Crawler Lambda function name"
+  value       = aws_lambda_function.crawler.function_name
+}
+
+output "crawler_schedule_rule_name" {
+  description = "Crawler EventBridge schedule rule name"
+  value       = aws_cloudwatch_event_rule.crawler_schedule.name
+}
+
 output "nat_gateway_ip" {
   description = "NAT Gateway public IP"
   value       = aws_eip.nat.public_ip
