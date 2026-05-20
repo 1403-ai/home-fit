@@ -278,15 +278,23 @@ export function QuestionsPage() {
                     <span>공급 {unit.supply_count}세대</span>
                   </div>
                   <div className="unit-costs">
-                    {unit.cost.map((c, cIdx) => (
-                      <div key={cIdx} className="unit-cost-row">
-                        <span className="cost-label">{c.label}</span>
-                        <span className="cost-amount">
-                          {c.amount.toLocaleString('ko-KR')}원
-                          {c.period && ` / ${c.period}`}
-                        </span>
-                      </div>
-                    ))}
+                    {unit.cost.map((c, cIdx) => {
+                      const periodLabel =
+                        c.period === 'monthly' || c.period === '월'
+                          ? '월'
+                          : c.period === 'once' || c.period === '1회'
+                            ? '1회'
+                            : c.period || null;
+                      return (
+                        <div key={cIdx} className="unit-cost-row">
+                          <span className="cost-label">{c.label}</span>
+                          <span className="cost-amount">
+                            {c.amount.toLocaleString('ko-KR')}원
+                            {periodLabel && ` / ${periodLabel}`}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
