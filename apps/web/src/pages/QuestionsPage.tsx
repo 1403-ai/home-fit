@@ -106,6 +106,17 @@ export function QuestionsPage() {
 
   return (
     <main className="questions-page" data-testid="questions-page">
+      {/* Top Navigation */}
+      <nav className="questions-top-nav">
+        <Link
+          to="/announcements"
+          className="btn-secondary"
+          data-testid="questions-to-list"
+        >
+          ← 목록으로
+        </Link>
+      </nav>
+
       {/* Progress Bar */}
       <div className="questions-progress" data-testid="questions-progress">
         <div

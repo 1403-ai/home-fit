@@ -10,6 +10,11 @@
 }
 
 /* Progress Bar */
+.questions-top-nav {
+  display: flex;
+  align-items: center;
+}
+
 .questions-progress {
   position: relative;
   height: 6px;
