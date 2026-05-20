@@ -35,3 +35,11 @@
 **Context**: Deferred item from initial Q&A page implementation now complete. TypeScript compiles cleanly.
 
 ---
+
+## Code Modification - Profile-Based Question Auto-Skip
+**Timestamp**: 2026-05-20T13:00:00Z
+**User Input**: "1번 부터 진행하자. what I want is, we get the response from GET /api/announcements/{seq}/qa and then once we have user info data from local storage, we need to be able to filter out the given qa from the API."
+**AI Response**: Implemented profile-based auto-skip logic. Created `utils/profileQAMapper.ts` with profile_key → UserProfile field mapping, label formatting, and answer display formatting. Updated QuestionsPage to: (1) load profile from localStorage on mount, (2) auto-advance through questions whose profile_key matches a profile value, (3) show "프로필에서 자동 적용된 정보" summary with skipped items, (4) provide "직접 입력" button to re-enter any skipped question. Added CSS for skipped summary UI.
+**Context**: Deferred item "Profile=나중에" now complete. TypeScript compiles cleanly.
+
+---
