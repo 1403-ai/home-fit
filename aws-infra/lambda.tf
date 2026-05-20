@@ -40,7 +40,7 @@ resource "aws_iam_role_policy" "lambda_s3_read" {
         Action = [
           "s3:GetObject"
         ]
-        Resource = "${aws_s3_bucket.documents.arn}/raw-pdfs/*"
+        Resource = "${aws_s3_bucket.documents.arn}/*"
       }
     ]
   })

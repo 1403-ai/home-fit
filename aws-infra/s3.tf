@@ -45,7 +45,6 @@ resource "aws_s3_bucket_notification" "pdf_upload" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.pdf_analyzer.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "raw-pdfs/"
     filter_suffix       = ".pdf"
   }
 
