@@ -1,1 +1,36 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/mocks/announcements.ts","./src/pages/announcementspage.tsx","./src/pages/homepage.tsx","./src/pages/onboardingpage.tsx","./src/types/announcement.ts","./src/utils/filterannouncements.test.ts","./src/utils/filterannouncements.ts"],"version":"5.9.3"}
+{
+    "root": [
+        "./src/app.tsx",
+        "./src/main.tsx",
+        "./src/vite-env.d.ts",
+        "./src/components/gnb.tsx",
+        "./src/components/onboardingform.tsx",
+        "./src/components/stepindicator.tsx",
+        "./src/components/illustrations/homeillustration.tsx",
+        "./src/components/steps/step1region.tsx",
+        "./src/components/steps/step2household.tsx",
+        "./src/components/steps/step3assets.tsx",
+        "./src/components/steps/stepcomplete.tsx",
+        "./src/mocks/announcements.ts",
+        "./src/mocks/qa-state-machines.ts",
+        "./src/pages/announcementspage.tsx",
+        "./src/pages/homepage.tsx",
+        "./src/pages/myprofilepage.tsx",
+        "./src/pages/onboardingpage.tsx",
+        "./src/pages/questionspage.tsx",
+        "./src/pages/statuspage.tsx",
+        "./src/types/announcement.ts",
+        "./src/types/profile.ts",
+        "./src/types/qa.ts",
+        "./src/utils/filterannouncements.test.ts",
+        "./src/utils/filterannouncements.ts",
+        "./src/utils/number-input.ts",
+        "./src/utils/profile.ts",
+        "./src/utils/qastatemachine.test.ts",
+        "./src/utils/qastatemachine.ts",
+        "./src/utils/storage.ts",
+        "./src/utils/validation.ts"
+    ],
+    "errors": true,
+    "version": "5.9.3"
+}
