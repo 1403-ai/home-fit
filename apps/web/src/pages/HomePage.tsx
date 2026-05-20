@@ -107,12 +107,22 @@ export function HomePage() {
         </div>
       </section>
 
-      <Link
-        to="/onboarding"
-        className="w-full max-w-3xl mx-auto inline-block text-center px-6 py-3.5 rounded-lg bg-teal-700 text-white font-semibold text-base no-underline hover:bg-teal-800 transition-colors"
-      >
-        프로필 입력하기
-      </Link>
+      <div className="w-full max-w-3xl mx-auto flex flex-col gap-3">
+        <Link
+          to="/onboarding"
+          className="inline-block text-center px-6 py-3.5 rounded-lg bg-teal-700 text-white font-semibold text-base no-underline hover:bg-teal-800 transition-colors"
+          data-testid="home-go-onboarding"
+        >
+          프로필 입력하기
+        </Link>
+        <Link
+          to="/my-profile"
+          className="inline-block text-center px-6 py-3.5 rounded-lg bg-white border border-teal-700 text-teal-700 font-semibold text-base no-underline hover:bg-teal-50 transition-colors"
+          data-testid="home-go-my-profile"
+        >
+          내 정보 확인
+        </Link>
+      </div>
     </main>
   );
 }

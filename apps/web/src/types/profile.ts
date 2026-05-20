@@ -20,26 +20,40 @@ export const REGIONS = [
 
 export type Region = (typeof REGIONS)[number];
 
+export type MarriageStatus = 'single' | 'married' | 'engaged';
+
+export interface MinorChild {
+  isUnborn: boolean;
+  birthDate?: string;
+  expectedDate?: string;
+}
+
 export interface UserProfile {
   householdSize: number;
   totalIncome: number;
-  isMarried: boolean;
-  weddingAnniversary: string | null;
+  marriageStatus: MarriageStatus;
+  marriageRegistrationDate: string | null;
   region: Region | '';
   lastMoveInDate: string;
   housingSubscriptionCount: number;
-  minorChildrenBirthDates: string[];
+  minorChildrenCount: number;
+  minorChildren: MinorChild[];
+  hasCar: boolean;
+  carValue: number;
   totalAssets: number;
 }
 
 export interface FormErrors {
   householdSize?: string;
   totalIncome?: string;
-  isMarried?: string;
-  weddingAnniversary?: string;
+  marriageStatus?: string;
+  marriageRegistrationDate?: string;
   region?: string;
   lastMoveInDate?: string;
   housingSubscriptionCount?: string;
-  minorChildrenBirthDates?: string[];
+  minorChildrenCount?: string;
+  minorChildren?: string[];
+  hasCar?: string;
+  carValue?: string;
   totalAssets?: string;
 }
