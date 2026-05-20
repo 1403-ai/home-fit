@@ -10,10 +10,4 @@ coverage
 tmp
 .vite
 .kiro
-
-# Terraform
-*.tfvars
-*.tfstate
-*.tfstate.backup
-.terraform/
-lambda-placeholder.zip
+aidlc-docs
