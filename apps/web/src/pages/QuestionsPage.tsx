@@ -49,6 +49,11 @@ function autoSkipFromState(
     const profileAnswer = getProfileAnswer(questionState.profile_key, profile);
     if (profileAnswer === undefined) break;
 
+    // Only auto-skip when the profile value type matches the question input type
+    if (questionState.input === 'boolean' && typeof profileAnswer !== 'boolean') break;
+    if (questionState.input === 'number' && typeof profileAnswer !== 'number') break;
+    if (questionState.input === 'choice' && typeof profileAnswer !== 'string') break;
+
     // Auto-answer this question
     const nextStateId = evaluateTransition(questionState.transitions, profileAnswer);
     skipped.push({
