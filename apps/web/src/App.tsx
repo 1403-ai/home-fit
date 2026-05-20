@@ -1,14 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { GNB } from './components/GNB';
 import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { GlossaryPage } from './pages/GlossaryPage';
 import { HomePage } from './pages/HomePage';
+import { MyProfilePage } from './pages/MyProfilePage';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { QuestionsPage } from './pages/QuestionsPage';
-import { MyProfilePage } from './pages/MyProfilePage';
+import { StatusPage } from './pages/StatusPage';
 
 export function App() {
   return (
     <BrowserRouter>
+      <GNB />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
@@ -16,6 +19,7 @@ export function App() {
         <Route path="/announcements/:seq/questions" element={<QuestionsPage />} />
         <Route path="/my-profile" element={<MyProfilePage />} />
         <Route path="/glossary" element={<GlossaryPage />} />
+        <Route path="/status" element={<StatusPage />} />
       </Routes>
     </BrowserRouter>
   );
