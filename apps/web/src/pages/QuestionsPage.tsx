@@ -1,14 +1,67 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import type { QAStateMachine, Answer, AnswerEntry } from '../types/qa';
+import type { QAStateMachine, Answer, AnswerEntry, QuestionState } from '../types/qa';
 import {
   evaluateTransition,
   isQuestionState,
   isResultState,
 } from '../utils/qaStateMachine';
+import { loadProfileFromStorage } from '../utils/storage';
+import {
+  getProfileAnswer,
+  getProfileKeyLabel,
+  formatProfileAnswer,
+} from '../utils/profileQAMapper';
+import type { UserProfile } from '../types/profile';
 import './QuestionsPage.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://www.homefit1403.site/api';
+
+interface SkippedQuestion {
+  stateId: string;
+  profileKey: string;
+  answer: Answer;
+}
+
+/**
+ * Walks the state machine from a given state, auto-answering questions
+ * whose profile_key has a matching value in the user profile.
+ * Returns the list of skipped questions, the resulting history entries,
+ * and the final state ID where auto-skip stopped.
+ */
+function autoSkipFromState(
+  machine: QAStateMachine,
+  startStateId: string,
+  profile: UserProfile,
+): { skipped: SkippedQuestion[]; autoHistory: AnswerEntry[]; finalStateId: string } {
+  const skipped: SkippedQuestion[] = [];
+  const autoHistory: AnswerEntry[] = [];
+  let currentId = startStateId;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const state = machine.states[currentId];
+    if (!state || !isQuestionState(state)) break;
+
+    const questionState = state as QuestionState;
+    if (!questionState.profile_key) break;
+
+    const profileAnswer = getProfileAnswer(questionState.profile_key, profile);
+    if (profileAnswer === undefined) break;
+
+    // Auto-answer this question
+    const nextStateId = evaluateTransition(questionState.transitions, profileAnswer);
+    skipped.push({
+      stateId: currentId,
+      profileKey: questionState.profile_key,
+      answer: profileAnswer,
+    });
+    autoHistory.push({ stateId: currentId, answer: profileAnswer });
+    currentId = nextStateId;
+  }
+
+  return { skipped, autoHistory, finalStateId: currentId };
+}
 
 export function QuestionsPage() {
   const { seq } = useParams<{ seq: string }>();
@@ -20,6 +73,8 @@ export function QuestionsPage() {
   const [currentStateId, setCurrentStateId] = useState<string>('');
   const [history, setHistory] = useState<AnswerEntry[]>([]);
   const [numberInput, setNumberInput] = useState<string>('');
+  const [skippedQuestions, setSkippedQuestions] = useState<SkippedQuestion[]>([]);
+  const [showSkippedSummary, setShowSkippedSummary] = useState(true);
 
   useEffect(() => {
     if (!seq) {
@@ -37,7 +92,25 @@ export function QuestionsPage() {
         }
         const data = (await response.json()) as QAStateMachine;
         setMachine(data);
-        setCurrentStateId(data.initial);
+
+        // Attempt profile-based auto-skip
+        const profile = loadProfileFromStorage();
+        if (profile) {
+          const { skipped, autoHistory, finalStateId } = autoSkipFromState(
+            data,
+            data.initial,
+            profile,
+          );
+          if (skipped.length > 0) {
+            setSkippedQuestions(skipped);
+            setHistory(autoHistory);
+            setCurrentStateId(finalStateId);
+          } else {
+            setCurrentStateId(data.initial);
+          }
+        } else {
+          setCurrentStateId(data.initial);
+        }
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -118,6 +191,24 @@ export function QuestionsPage() {
     if (!Number.isNaN(value)) {
       handleAnswer(value);
     }
+  }
+
+  /**
+   * Re-enter a skipped question: rewind to that state so the user
+   * can manually answer it instead of using the profile value.
+   */
+  function handleReenterSkipped(skippedIndex: number) {
+    if (!machine) return;
+    const target = skippedQuestions[skippedIndex];
+
+    // Remove this and all subsequent skipped entries
+    const remainingSkipped = skippedQuestions.slice(0, skippedIndex);
+    setSkippedQuestions(remainingSkipped);
+
+    // Rewind history to just before the skipped question
+    setHistory(history.slice(0, skippedIndex));
+    setCurrentStateId(target.stateId);
+    setNumberInput('');
   }
 
   // Result state reached
@@ -247,6 +338,44 @@ export function QuestionsPage() {
           ← 목록으로
         </Link>
       </nav>
+
+      {/* Profile Auto-Skip Summary */}
+      {skippedQuestions.length > 0 && showSkippedSummary && (
+        <div className="skipped-summary" data-testid="skipped-summary">
+          <div className="skipped-summary-header">
+            <span className="skipped-summary-icon">👤</span>
+            <strong>프로필에서 자동 적용된 정보</strong>
+            <button
+              type="button"
+              className="skipped-summary-close"
+              onClick={() => setShowSkippedSummary(false)}
+              aria-label="닫기"
+            >
+              ×
+            </button>
+          </div>
+          <ul className="skipped-summary-list">
+            {skippedQuestions.map((sq, idx) => (
+              <li key={sq.stateId}>
+                <span className="skipped-label">
+                  {getProfileKeyLabel(sq.profileKey)}
+                </span>
+                <span className="skipped-value">
+                  {formatProfileAnswer(sq.profileKey, sq.answer)}
+                </span>
+                <button
+                  type="button"
+                  className="skipped-reenter-btn"
+                  onClick={() => handleReenterSkipped(idx)}
+                  data-testid={`reenter-${sq.profileKey}`}
+                >
+                  직접 입력
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Progress Bar */}
       <div className="questions-progress" data-testid="questions-progress">
