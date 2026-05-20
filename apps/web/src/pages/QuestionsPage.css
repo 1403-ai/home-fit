@@ -188,28 +188,142 @@
   height: 48px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: #fffbeb;
-  color: #b45309;
   font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.result-card h2 {
-  margin: 0 0 8px;
-  font-size: 20px;
+.result--pass .result-icon {
+  background: #fffbeb;
+  color: #b45309;
 }
 
-.result-message {
+.result--conditional .result-icon {
+  background: #fff8e6;
+  color: #b8860b;
+}
+
+.result--fail .result-icon {
+  background: #fef2f2;
+  color: #c53030;
+}
+
+.result-card h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: #172026;
+}
+
+.result-reason {
   color: #596672;
   font-size: 15px;
-  margin: 0 0 12px;
+  margin: 0 0 20px;
+  line-height: 1.5;
 }
 
-.result-preview {
+.result-warnings {
+  text-align: left;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 12px 16px 12px 32px;
+  margin: 0 0 20px;
+  list-style: disc;
+}
+
+.result-warnings li {
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+
+/* Units Section */
+.result-units {
+  text-align: left;
+  margin: 20px 0;
+}
+
+.result-units h3 {
   font-size: 16px;
-  margin: 0 0 24px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #172026;
+}
+
+.result-unit-card {
+  border: 1px solid #d8e0e8;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #f9fafb;
+}
+
+.unit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.unit-header strong {
+  font-size: 15px;
+  color: #172026;
+}
+
+.unit-track {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.unit-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 13px;
+  color: #596672;
+  margin-bottom: 12px;
+}
+
+.unit-costs {
+  border-top: 1px solid #eef2f6;
+  padding-top: 10px;
+}
+
+.unit-cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.cost-label {
+  font-size: 13px;
+  color: #596672;
+}
+
+.cost-amount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #172026;
+}
+
+/* Source Link */
+.result-source-link {
+  display: inline-block;
+  margin: 16px 0 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #b45309;
+  text-decoration: none;
+}
+
+.result-source-link:hover {
+  text-decoration: underline;
 }
 
 .result-actions {

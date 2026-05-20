@@ -2,12 +2,9 @@ import * as cheerio from 'cheerio';
 import type { AnnouncementEntry, AnnouncementDetail, AttachmentInfo } from './types.js';
 
 const BASE_URL = 'https://www.i-sh.co.kr';
-const MULTI_ITEM_SEQS = '1,2,4,8,16,32,64,128,256,512,1024';
 
-/** 공고 목록 페이지 URL (임대+분양 전체) */
-const LIST_URL =
-  `${BASE_URL}/main/lay2/program/S1T294C295/www/brd/m_241/list.do` +
-  `?multi_itm_seqs=${MULTI_ITEM_SEQS}`;
+/** 공고 목록 페이지 URL */
+const LIST_URL = `${BASE_URL}/main/lay2/program/S1T294C295/www/brd/m_241/list.do`;
 
 /** 공고 상세 페이지 URL */
 const VIEW_URL = `${BASE_URL}/main/lay2/program/S1T294C295/www/brd/m_241/view.do`;
@@ -68,7 +65,7 @@ function makeListFormBody(page: number): URLSearchParams {
   body.set('seq', '');
   body.set('itm_seq_1', '0');
   body.set('multi_itm_seq', '0');
-  body.set('multi_itm_seqsStr', MULTI_ITEM_SEQS);
+  body.set('multi_itm_seqsStr', '');
   body.set('isRecrnoti', '');
   return body;
 }
@@ -328,7 +325,7 @@ function isPdfFile(fileName: string, urlOrOnclick: string): boolean {
 }
 
 function isTargetPdfFile(fileName: string): boolean {
-  return fileName.includes('공고');
+  return /모집\s*공고/.test(fileName);
 }
 
 function sanitizeFileName(name: string): string {

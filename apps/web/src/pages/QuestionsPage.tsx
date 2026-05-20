@@ -8,7 +8,7 @@ import {
 } from '../utils/qaStateMachine';
 import './QuestionsPage.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://www.homefit1403.site/api';
 
 export function QuestionsPage() {
   const { seq } = useParams<{ seq: string }>();
@@ -122,17 +122,94 @@ export function QuestionsPage() {
 
   // Result state reached
   if (isResultState(currentState)) {
+    const resultIcon =
+      currentState.result === '적합'
+        ? '✓'
+        : currentState.result === '조건부'
+          ? '⚠'
+          : '✕';
+    const resultClass =
+      currentState.result === '적합'
+        ? 'result--pass'
+        : currentState.result === '조건부'
+          ? 'result--conditional'
+          : 'result--fail';
+
     return (
       <main className="questions-page" data-testid="questions-page">
-        <div className="questions-card result-card" data-testid="questions-result">
-          <div className="result-icon">✓</div>
-          <h2>Q&A 완료</h2>
-          <p className="result-message">
-            모든 질문에 답변하셨습니다. 결과 화면은 다음 업데이트에서 제공됩니다.
-          </p>
-          <p className="result-preview">
-            예상 결과: <strong>{currentState.result}</strong>
-          </p>
+        <div
+          className={`questions-card result-card ${resultClass}`}
+          data-testid="questions-result"
+        >
+          <div className="result-icon">{resultIcon}</div>
+          <h2>
+            {currentState.result === '적합' && '신청 자격이 있습니다'}
+            {currentState.result === '부적합' && '신청 자격 요건을 충족하지 않습니다'}
+            {currentState.result === '조건부' && '추가 확인이 필요합니다'}
+          </h2>
+
+          {/* 부적합 사유 */}
+          {currentState.reason && (
+            <p className="result-reason" data-testid="result-reason">
+              {currentState.reason}
+            </p>
+          )}
+
+          {/* 조건부 경고 */}
+          {currentState.warnings && currentState.warnings.length > 0 && (
+            <ul className="result-warnings" data-testid="result-warnings">
+              {currentState.warnings.map((warning, idx) => (
+                <li key={idx}>{warning}</li>
+              ))}
+            </ul>
+          )}
+
+          {/* 적합/조건부: 단지 정보 */}
+          {currentState.units && currentState.units.length > 0 && (
+            <div className="result-units" data-testid="result-units">
+              <h3>신청 가능 단지</h3>
+              {currentState.units.map((unit, idx) => (
+                <div key={idx} className="result-unit-card">
+                  <div className="unit-header">
+                    <strong>{unit.complex_name}</strong>
+                    <span className="unit-track">{unit.track}</span>
+                  </div>
+                  <div className="unit-details">
+                    <span>{unit.location}</span>
+                    <span>
+                      {unit.unit_type} · 전용 {unit.area_sqm}㎡
+                    </span>
+                    <span>공급 {unit.supply_count}세대</span>
+                  </div>
+                  <div className="unit-costs">
+                    {unit.cost.map((c, cIdx) => (
+                      <div key={cIdx} className="unit-cost-row">
+                        <span className="cost-label">{c.label}</span>
+                        <span className="cost-amount">
+                          {c.amount.toLocaleString('ko-KR')}원
+                          {c.period && ` / ${c.period}`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 원본 공고 링크 */}
+          {currentState.source_url && (
+            <a
+              href={currentState.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="result-source-link"
+              data-testid="result-source-link"
+            >
+              원본 공고 보기 →
+            </a>
+          )}
+
           <div className="result-actions">
             <button
               type="button"
