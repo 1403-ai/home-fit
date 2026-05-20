@@ -106,3 +106,24 @@ h1 {
   background: #f1f4f7;
   padding: 6px 10px;
 }
+
+.onboarding-link {
+  display: inline-block;
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #12615f;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.onboarding-link:hover {
+  background: #0e4e4c;
+}
