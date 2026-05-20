@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { mockAnnouncements } from '../mocks/announcements';
 import type { StatusFilter } from '../types/announcement';
 import { filterByStatus } from '../utils/filterAnnouncements';
@@ -16,6 +17,7 @@ function formatDateRange(start: string | null, end: string | null): string {
 export function AnnouncementsPage() {
   const [activeFilter, setActiveFilter] = useState<StatusFilter>('전체');
   const filtered = filterByStatus(mockAnnouncements, activeFilter);
+  const navigate = useNavigate();
 
   return (
     <main className="announcements-page" data-testid="announcements-page">
@@ -49,8 +51,16 @@ export function AnnouncementsPage() {
         {filtered.map((item) => (
           <li
             key={item.seq}
-            className="announcement-item"
+            className="announcement-item clickable"
             data-testid={`announcement-item-${item.seq}`}
+            onClick={() => navigate(`/announcements/${item.seq}/questions`)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                navigate(`/announcements/${item.seq}/questions`);
+              }
+            }}
           >
             <div className="announcement-item-header">
               <h2 className="announcement-title">{item.title}</h2>
