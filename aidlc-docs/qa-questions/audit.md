@@ -43,3 +43,16 @@
 **Context**: Deferred item "Profile=나중에" now complete. TypeScript compiles cleanly.
 
 ---
+
+## Bug Fix — Cost Period Display
+**Timestamp**: 2026-05-20T14:00:00Z
+**User Input**: "let's update the result page at the end of the q&a. when user's eligible, we're showing the price and all that. but what is the '/ once' ?? and do we have the actual announcement url from sh that we can render? can you check?"
+**AI Response**: Investigated the cost `period` field. The Bedrock LLM prompt outputs `"monthly"|"once"|null` but the UI was rendering raw English (`/ once`). Also confirmed `source_url` is already rendered when present in the QA state machine, but the LLM prompt sets it to `null` — population from crawler's `detailUrl` is a separate task.
+**User Input**: "hmm only do the 1."
+**AI Response**: Fixed period display mapping in `QuestionsPage.tsx`. Maps `"monthly"`→`"월"`, `"once"`→`"1회"`, `null`→no suffix.
+**Context**: CONSTRUCTION — Result page cost display fix.
+
+**Changes**:
+- Modified: `apps/web/src/pages/QuestionsPage.tsx` — added `periodLabel` mapping to convert English period values to Korean before rendering
+
+---
