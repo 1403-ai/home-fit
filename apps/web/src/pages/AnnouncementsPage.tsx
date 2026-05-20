@@ -1,0 +1,93 @@
+import { useState } from 'react';
+import { mockAnnouncements } from '../mocks/announcements';
+import type { StatusFilter } from '../types/announcement';
+import { filterByStatus } from '../utils/filterAnnouncements';
+import './AnnouncementsPage.css';
+
+const STATUS_FILTERS: StatusFilter[] = ['전체', '진행중', '예정'];
+
+function formatDateRange(start: string | null, end: string | null): string {
+  if (!start && !end) return '일정 미정';
+  if (start && end) return `${start} ~ ${end}`;
+  if (start) return `${start} ~`;
+  return `~ ${end}`;
+}
+
+export function AnnouncementsPage() {
+  const [activeFilter, setActiveFilter] = useState<StatusFilter>('전체');
+  const filtered = filterByStatus(mockAnnouncements, activeFilter);
+
+  return (
+    <main className="announcements-page" data-testid="announcements-page">
+      <header className="announcements-header">
+        <h1>공고 목록</h1>
+        <p className="announcements-subtitle">
+          SH 서울주택도시공사 임대/분양 공고 현황
+        </p>
+      </header>
+
+      <nav
+        className="announcements-filters"
+        aria-label="공고 상태 필터"
+        data-testid="announcements-filters"
+      >
+        {STATUS_FILTERS.map((filter) => (
+          <button
+            key={filter}
+            type="button"
+            className={`filter-tab ${activeFilter === filter ? 'active' : ''}`}
+            onClick={() => setActiveFilter(filter)}
+            aria-pressed={activeFilter === filter}
+            data-testid={`filter-tab-${filter}`}
+          >
+            {filter}
+          </button>
+        ))}
+      </nav>
+
+      <ul className="announcements-list" data-testid="announcements-list">
+        {filtered.map((item) => (
+          <li
+            key={item.seq}
+            className="announcement-item"
+            data-testid={`announcement-item-${item.seq}`}
+          >
+            <div className="announcement-item-header">
+              <h2 className="announcement-title">{item.title}</h2>
+              <span
+                className={`badge status-badge status-${item.status === '진행중' ? 'active' : 'upcoming'}`}
+              >
+                {item.status}
+              </span>
+            </div>
+
+            <div className="announcement-meta">
+              <span className="badge housing-badge">{item.housing_type}</span>
+              <span
+                className={`badge supply-badge supply-${item.supply_category === '임대' ? 'rent' : 'sale'}`}
+              >
+                {item.supply_category}
+              </span>
+              <span className="meta-separator" aria-hidden="true">
+                ·
+              </span>
+              <span className="announcement-date">
+                {formatDateRange(item.application_start, item.application_end)}
+              </span>
+              <span className="meta-separator" aria-hidden="true">
+                ·
+              </span>
+              <span className="announcement-units">{item.unit_count}세대</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {filtered.length === 0 && (
+        <p className="announcements-empty" data-testid="announcements-empty">
+          해당 상태의 공고가 없습니다.
+        </p>
+      )}
+    </main>
+  );
+}

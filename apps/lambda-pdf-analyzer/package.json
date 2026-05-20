@@ -1,0 +1,20 @@
+{
+  "name": "@home-fit-ai/lambda-pdf-analyzer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc && cp package.json dist/ && cp package-lock.json dist/ 2>/dev/null || true",
+    "package": "npm run build && cd dist && npm install --omit=dev && zip -r ../lambda-pdf-analyzer.zip .",
+    "deploy": "npm run package && aws lambda update-function-code --function-name home-fit-pdf-analyzer --zip-file fileb://lambda-pdf-analyzer.zip --profile aidlc --region us-east-1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "3.712.0",
+    "@aws-sdk/client-s3": "3.712.0",
+    "mongodb": "6.12.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.145",
+    "@types/node": "22.10.0",
+    "typescript": "5.7.2"
+  }
+}
