@@ -4,7 +4,7 @@ import type { AnnouncementSummary, StatusFilter } from '../types/announcement';
 import { filterByStatus } from '../utils/filterAnnouncements';
 import './AnnouncementsPage.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+const API_BASE_URL = 'https://www.homefit1403.site/api';
 const STATUS_FILTERS: StatusFilter[] = ['전체', '진행중', '예정'];
 
 function formatDateRange(start: string | null, end: string | null): string {

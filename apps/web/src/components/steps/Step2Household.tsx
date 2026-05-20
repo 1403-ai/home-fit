@@ -34,8 +34,8 @@ export function Step2Household({
         </label>
         <input
           id="householdSize"
-          type="number"
-          min={1}
+          type="text"
+          inputMode="numeric"
           value={displayNumberValue(profile.householdSize)}
           onChange={(e) => onChange('householdSize', parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
@@ -124,8 +124,8 @@ export function Step2Household({
         </label>
         <input
           id="minorChildrenCount"
-          type="number"
-          min={0}
+          type="text"
+          inputMode="numeric"
           value={displayNumberValue(profile.minorChildrenCount)}
           onChange={(e) => onMinorChildrenCountChange(parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
