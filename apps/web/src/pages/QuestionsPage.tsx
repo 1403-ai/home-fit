@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockStateMachines } from '../mocks/qa-state-machines';
-import type { Answer, AnswerEntry } from '../types/qa';
+import type { QAStateMachine, Answer, AnswerEntry } from '../types/qa';
 import {
   evaluateTransition,
   isQuestionState,
@@ -9,15 +8,70 @@ import {
 } from '../utils/qaStateMachine';
 import './QuestionsPage.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+
 export function QuestionsPage() {
   const { seq } = useParams<{ seq: string }>();
-  const machine = seq ? mockStateMachines[seq] : undefined;
 
-  const [currentStateId, setCurrentStateId] = useState<string>(
-    machine?.initial ?? '',
-  );
+  const [machine, setMachine] = useState<QAStateMachine | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [currentStateId, setCurrentStateId] = useState<string>('');
   const [history, setHistory] = useState<AnswerEntry[]>([]);
   const [numberInput, setNumberInput] = useState<string>('');
+
+  useEffect(() => {
+    if (!seq) {
+      setLoading(false);
+      return;
+    }
+
+    async function fetchQA() {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/announcements/${seq}/qa`,
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
+        const data = (await response.json()) as QAStateMachine;
+        setMachine(data);
+        setCurrentStateId(data.initial);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void fetchQA();
+  }, [seq]);
+
+  if (loading) {
+    return (
+      <main className="questions-page" data-testid="questions-page">
+        <div className="questions-card">
+          <p className="questions-empty">Q&A 데이터를 불러오는 중...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="questions-page" data-testid="questions-page">
+        <div className="questions-card">
+          <p className="questions-empty">
+            Q&A 데이터를 불러오지 못했습니다: {error}
+          </p>
+          <Link to="/announcements" className="questions-back-link">
+            공고 목록으로 돌아가기
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   if (!machine) {
     return (
