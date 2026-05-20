@@ -9,6 +9,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_TAG: ${{ github.sha }}
+  # Node.js 20 actions deprecated 경고 해소 (2026-06-02 부터 강제됨)
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build-and-deploy:
