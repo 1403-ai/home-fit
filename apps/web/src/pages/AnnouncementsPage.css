@@ -67,7 +67,11 @@
   transition: box-shadow 0.15s;
 }
 
-.announcement-item:hover {
+.announcement-item.clickable {
+  cursor: pointer;
+}
+
+.announcement-item.clickable:hover {
   box-shadow: 0 4px 12px rgb(20 34 45 / 8%);
 }
 
