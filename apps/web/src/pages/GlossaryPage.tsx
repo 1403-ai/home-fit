@@ -112,11 +112,11 @@ export function GlossaryPage() {
     const base = 'w-full text-left px-4 py-3 rounded-lg border-2 font-medium transition-colors';
 
     if (states[quizIndex] === 'unanswered') {
-      return `${base} border-gray-200 bg-white hover:border-teal-500 hover:bg-teal-50 cursor-pointer`;
+      return `${base} border-gray-200 bg-white hover:border-amber-500 hover:bg-amber-50 cursor-pointer`;
     }
 
     if (option === quizzes[quizIndex].correctAnswer) {
-      return `${base} border-green-500 bg-green-50 text-green-800`;
+      return `${base} border-lime-500 bg-lime-50 text-lime-800`;
     }
 
     if (option === answers[quizIndex] && states[quizIndex] === 'incorrect') {
@@ -147,7 +147,7 @@ export function GlossaryPage() {
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-5 py-2.5 rounded-lg bg-teal-700 text-white font-semibold hover:bg-teal-800 transition-colors"
+            className="mt-4 px-5 py-2.5 rounded-lg bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors"
             data-testid="glossary-retry-button"
           >
             다시 시도
@@ -173,7 +173,7 @@ export function GlossaryPage() {
     <main className="min-h-screen bg-gray-50 p-6 md:p-8">
       <div className="w-full max-w-2xl mx-auto">
         <header className="mb-8">
-          <p className="mb-2 text-teal-700 text-sm font-bold uppercase tracking-wide">
+          <p className="mb-2 text-orange-600 text-sm font-bold uppercase tracking-wide">
             Home Fit AI
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -192,11 +192,11 @@ export function GlossaryPage() {
               data-testid={`glossary-quiz-${quizIndex}`}
             >
               <div className="flex items-center gap-2 mb-3">
-                <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
+                <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-100 text-amber-700 text-sm font-bold">
                   {quizIndex + 1}
                 </span>
                 {states[quizIndex] === 'correct' && (
-                  <span className="text-green-600 text-sm font-semibold" data-testid={`glossary-quiz-${quizIndex}-correct`}>
+                  <span className="text-lime-600 text-sm font-semibold" data-testid={`glossary-quiz-${quizIndex}-correct`}>
                     정답! 🎉
                   </span>
                 )}
@@ -231,7 +231,7 @@ export function GlossaryPage() {
         <div className="mt-8 text-center">
           <button
             onClick={handleNewQuiz}
-            className="px-6 py-3 rounded-lg bg-teal-700 text-white font-semibold hover:bg-teal-800 transition-colors"
+            className="px-6 py-3 rounded-lg bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors"
             data-testid="glossary-new-quiz-button"
           >
             🔄 다른 퀴즈

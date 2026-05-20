@@ -21,7 +21,7 @@ export function Step1Region({ profile, errors, onChange }: Step1RegionProps) {
           id="region"
           value={profile.region}
           onChange={(e) => onChange('region', e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
           data-testid="step1-region-select"
         >
           <option value="">선택해 주세요</option>
@@ -46,7 +46,7 @@ export function Step1Region({ profile, errors, onChange }: Step1RegionProps) {
           type="date"
           value={profile.lastMoveInDate}
           onChange={(e) => onChange('lastMoveInDate', e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
           data-testid="step1-last-move-in-date"
         />
         {errors.lastMoveInDate && (

@@ -40,13 +40,13 @@
 }
 
 .filter-tab:hover {
-  border-color: #12615f;
-  color: #12615f;
+  border-color: #b45309;
+  color: #b45309;
 }
 
 .filter-tab.active {
-  background: #12615f;
-  border-color: #12615f;
+  background: #b45309;
+  border-color: #b45309;
   color: #ffffff;
 }
 
@@ -101,8 +101,8 @@
 }
 
 .status-badge.status-active {
-  background: #e8f5f3;
-  color: #12615f;
+  background: #fffbeb;
+  color: #92400e;
 }
 
 .status-badge.status-upcoming {
@@ -116,13 +116,13 @@
 }
 
 .supply-badge.supply-rent {
-  background: #e8f0fe;
-  color: #1a56db;
+  background: #fff7ed;
+  color: #c2410c;
 }
 
 .supply-badge.supply-sale {
-  background: #fce8f3;
-  color: #9b1c5e;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 /* Meta */

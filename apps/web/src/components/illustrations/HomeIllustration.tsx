@@ -72,7 +72,7 @@ export function HomeIllustration({ className = '' }: HomeIllustrationProps) {
 
       {/* 사람 1 (왼쪽) */}
       <circle cx="120" cy="245" r="10" fill="#FECACA" />
-      <rect x="113" y="255" width="14" height="20" rx="7" fill="#3B82F6" />
+      <rect x="113" y="255" width="14" height="20" rx="7" fill="#F97316" />
 
       {/* 사람 2 (오른쪽) */}
       <circle cx="200" cy="245" r="10" fill="#FECACA" />

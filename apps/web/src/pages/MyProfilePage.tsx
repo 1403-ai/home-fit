@@ -40,7 +40,7 @@ export function MyProfilePage() {
               </p>
               <Link
                 to="/onboarding"
-                className="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                className="inline-block px-6 py-3 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors"
                 data-testid="my-profile-go-onboarding"
               >
                 프로필 입력하기
@@ -164,7 +164,7 @@ export function MyProfilePage() {
             <button
               type="button"
               onClick={() => navigate('/onboarding')}
-              className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="w-full px-6 py-3 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors"
               data-testid="my-profile-edit-button"
             >
               수정하기
