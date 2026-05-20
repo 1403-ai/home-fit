@@ -25,7 +25,7 @@
 
 .questions-progress-bar {
   height: 100%;
-  background: #12615f;
+  background: #b45309;
   border-radius: 999px;
   transition: width 0.3s ease;
 }
@@ -96,7 +96,7 @@
 }
 
 .number-input:focus {
-  border-color: #12615f;
+  border-color: #d97706;
 }
 
 .number-unit {
@@ -125,23 +125,23 @@
 }
 
 .btn-answer:hover {
-  border-color: #12615f;
-  background: #f0faf9;
+  border-color: #b45309;
+  background: #fffbeb;
 }
 
 .btn-answer:active {
-  background: #e8f5f3;
+  background: #fef3c7;
 }
 
 .btn-submit {
   text-align: center;
-  background: #12615f;
+  background: #b45309;
   color: #ffffff;
-  border-color: #12615f;
+  border-color: #b45309;
 }
 
 .btn-submit:hover {
-  background: #0e4e4c;
+  background: #92400e;
 }
 
 .btn-submit:disabled {
@@ -169,8 +169,8 @@
 }
 
 .btn-secondary:hover {
-  border-color: #12615f;
-  color: #12615f;
+  border-color: #b45309;
+  color: #b45309;
 }
 
 .btn-secondary:disabled {
@@ -188,8 +188,8 @@
   height: 48px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: #e8f5f3;
-  color: #12615f;
+  background: #fffbeb;
+  color: #b45309;
   font-size: 24px;
   display: flex;
   align-items: center;
@@ -222,7 +222,7 @@
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  background: #12615f;
+  background: #b45309;
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
@@ -232,7 +232,7 @@
 }
 
 .btn-primary:hover {
-  background: #0e4e4c;
+  background: #92400e;
 }
 
 /* Empty / Error */
@@ -246,7 +246,7 @@
 .questions-back-link {
   display: block;
   text-align: center;
-  color: #12615f;
+  color: #b45309;
   font-weight: 500;
   text-decoration: none;
 }

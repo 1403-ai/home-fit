@@ -205,7 +205,7 @@ export function OnboardingForm() {
             <button
               type="button"
               onClick={() => handleRestoreData(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors"
               data-testid="onboarding-form-restore-yes"
             >
               예, 불러오기
@@ -291,7 +291,7 @@ export function OnboardingForm() {
         <button
           type="button"
           onClick={handleNext}
-          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
+          className="px-6 py-2 bg-amber-600 text-white font-medium rounded-md hover:bg-amber-700 transition-colors"
           data-testid="onboarding-form-next-button"
         >
           {currentStep === TOTAL_STEPS ? '완료' : '다음'}

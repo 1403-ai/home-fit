@@ -19,16 +19,16 @@ export function StepIndicator({ currentStep, totalSteps, stepLabels }: StepIndic
                 {index > 0 && (
                   <div
                     className={`flex-1 h-0.5 ${
-                      isCompleted ? 'bg-blue-600' : 'bg-gray-200'
+                      isCompleted ? 'bg-amber-600' : 'bg-gray-200'
                     }`}
                   />
                 )}
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium shrink-0 ${
                     isCompleted
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-amber-600 text-white'
                       : isCurrent
-                        ? 'bg-blue-600 text-white ring-4 ring-blue-100'
+                        ? 'bg-amber-600 text-white ring-4 ring-amber-100'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                   data-testid={`step-indicator-${stepNumber}`}
@@ -38,14 +38,14 @@ export function StepIndicator({ currentStep, totalSteps, stepLabels }: StepIndic
                 {index < totalSteps - 1 && (
                   <div
                     className={`flex-1 h-0.5 ${
-                      isCompleted ? 'bg-blue-600' : 'bg-gray-200'
+                      isCompleted ? 'bg-amber-600' : 'bg-gray-200'
                     }`}
                   />
                 )}
               </div>
               <span
                 className={`mt-2 text-xs text-center ${
-                  isCurrent ? 'text-blue-600 font-medium' : 'text-gray-500'
+                  isCurrent ? 'text-amber-600 font-medium' : 'text-gray-500'
                 }`}
               >
                 {stepLabels[index]}

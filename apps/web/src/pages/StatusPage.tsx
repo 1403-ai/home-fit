@@ -38,7 +38,7 @@ export function StatusPage() {
   return (
     <main className="min-h-[calc(100vh-3.5rem)] bg-gray-50 grid content-center gap-6 p-8">
       <section className="w-full max-w-3xl mx-auto">
-        <p className="mb-3 text-teal-700 text-sm font-bold uppercase tracking-wide">
+        <p className="mb-3 text-orange-600 text-sm font-bold uppercase tracking-wide">
           Home Fit AI
         </p>
         <h1 className="text-4xl md:text-6xl font-bold leading-tight text-gray-900">
@@ -56,7 +56,7 @@ export function StatusPage() {
       >
         <div className="flex items-center justify-between gap-4 border-b border-gray-100 pb-3">
           <span className="text-gray-600">Web</span>
-          <strong className="rounded-full px-3 py-1.5 text-sm text-teal-700 bg-teal-50">
+          <strong className="rounded-full px-3 py-1.5 text-sm text-amber-700 bg-amber-50">
             connected
           </strong>
         </div>
@@ -65,8 +65,8 @@ export function StatusPage() {
           <strong
             className={`rounded-full px-3 py-1.5 text-sm ${
               health?.status === 'ok'
-                ? 'text-teal-700 bg-teal-50'
-                : 'text-amber-700 bg-amber-50'
+                ? 'text-amber-700 bg-amber-50'
+                : 'text-red-700 bg-red-50'
             }`}
           >
             {health?.status ?? 'checking'}
@@ -77,8 +77,8 @@ export function StatusPage() {
           <strong
             className={`rounded-full px-3 py-1.5 text-sm ${
               health?.mongo.connected
-                ? 'text-teal-700 bg-teal-50'
-                : 'text-amber-700 bg-amber-50'
+                ? 'text-amber-700 bg-amber-50'
+                : 'text-red-700 bg-red-50'
             }`}
           >
             {health

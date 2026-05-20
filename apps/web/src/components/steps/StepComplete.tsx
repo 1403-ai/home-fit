@@ -16,9 +16,9 @@ export function StepComplete({ profile }: StepCompleteProps) {
 
   return (
     <div className="space-y-6" data-testid="step-complete">
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-        <h2 className="text-lg font-semibold text-green-800">✅ 프로필 입력이 완료되었습니다!</h2>
-        <p className="mt-1 text-sm text-green-600">
+      <div className="bg-lime-50 border border-lime-200 rounded-lg p-4 text-center">
+        <h2 className="text-lg font-semibold text-lime-800">✅ 프로필 입력이 완료되었습니다!</h2>
+        <p className="mt-1 text-sm text-lime-600">
           아래에서 입력하신 내용을 확인해 주세요.
         </p>
       </div>
@@ -124,7 +124,7 @@ export function StepComplete({ profile }: StepCompleteProps) {
         <button
           type="button"
           onClick={() => navigate('/')}
-          className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full px-6 py-3 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition-colors"
           data-testid="step-complete-home-button"
         >
           홈으로

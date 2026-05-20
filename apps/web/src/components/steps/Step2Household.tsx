@@ -38,7 +38,7 @@ export function Step2Household({
           min={1}
           value={displayNumberValue(profile.householdSize)}
           onChange={(e) => onChange('householdSize', parseNumberInput(e.target.value))}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
           data-testid="step2-household-size"
         />
         <p className="mt-1 text-xs text-gray-500">
@@ -61,7 +61,7 @@ export function Step2Household({
               name="marriageStatus"
               checked={profile.marriageStatus === 'single'}
               onChange={() => onMarriageStatusChange('single')}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-amber-600 focus:ring-amber-500"
               data-testid="step2-marriage-single"
             />
             <span className="ml-2 text-sm text-gray-700">미혼</span>
@@ -72,7 +72,7 @@ export function Step2Household({
               name="marriageStatus"
               checked={profile.marriageStatus === 'married'}
               onChange={() => onMarriageStatusChange('married')}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-amber-600 focus:ring-amber-500"
               data-testid="step2-marriage-married"
             />
             <span className="ml-2 text-sm text-gray-700">기혼</span>
@@ -83,7 +83,7 @@ export function Step2Household({
               name="marriageStatus"
               checked={profile.marriageStatus === 'engaged'}
               onChange={() => onMarriageStatusChange('engaged')}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-amber-600 focus:ring-amber-500"
               data-testid="step2-marriage-engaged"
             />
             <span className="ml-2 text-sm text-gray-700">결혼예정</span>
@@ -105,7 +105,7 @@ export function Step2Household({
             type="date"
             value={profile.marriageRegistrationDate ?? ''}
             onChange={(e) => onChange('marriageRegistrationDate', e.target.value || null)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
             data-testid="step2-marriage-registration-date"
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -128,7 +128,7 @@ export function Step2Household({
           min={0}
           value={displayNumberValue(profile.minorChildrenCount)}
           onChange={(e) => onMinorChildrenCountChange(parseNumberInput(e.target.value))}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
           data-testid="step2-minor-children-count"
         />
         <p className="mt-1 text-xs text-gray-500">
@@ -162,7 +162,7 @@ export function Step2Household({
                       type="checkbox"
                       checked={child.isUnborn}
                       onChange={(e) => onChildUnbornToggle(index, e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                       data-testid={`step2-child-${index}-unborn-toggle`}
                     />
                     <span className="ml-2 text-sm text-gray-600">태아</span>
@@ -182,7 +182,7 @@ export function Step2Household({
                       type="date"
                       value={child.birthDate ?? ''}
                       onChange={(e) => onChildBirthDateChange(index, e.target.value)}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
                       data-testid={`step2-child-${index}-birthdate`}
                     />
                   </div>
@@ -199,7 +199,7 @@ export function Step2Household({
                       type="date"
                       value={child.expectedDate ?? ''}
                       onChange={(e) => onChildExpectedDateChange(index, e.target.value)}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
                       data-testid={`step2-child-${index}-expected-date`}
                     />
                     <p className="mt-1 text-xs text-gray-400">
