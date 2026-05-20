@@ -9,13 +9,13 @@ export function StepIndicator({ currentStep, totalSteps, stepLabels }: StepIndic
     <div className="mb-8 px-6" data-testid="step-indicator">
       {/* Progress line + circles row */}
       <div className="relative flex items-start justify-between">
-        {/* Background line aligned to circle center (h-8 / 2 = 16px = top-4) */}
-        <div className="absolute top-4 left-0 right-0 -translate-y-1/2 mx-4 h-0.5 bg-gray-200" />
+        {/* Background line: from first circle center to last circle center */}
+        <div className="absolute top-4 left-4 right-4 -translate-y-1/2 h-0.5 bg-gray-200" />
         {/* Active line */}
         <div
-          className="absolute top-4 left-0 -translate-y-1/2 mx-4 h-0.5 bg-amber-600 transition-all duration-300"
+          className="absolute top-4 left-4 right-4 -translate-y-1/2 h-0.5 bg-amber-600 transition-all duration-300 origin-left"
           style={{
-            width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%`,
+            transform: `translateY(-50%) scaleX(${(currentStep - 1) / (totalSteps - 1)})`,
           }}
         />
 
