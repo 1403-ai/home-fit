@@ -3,6 +3,7 @@ import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { HomePage } from './pages/HomePage';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { QuestionsPage } from './pages/QuestionsPage';
+import { MyProfilePage } from './pages/MyProfilePage';
 
 export function App() {
   return (
@@ -12,6 +13,7 @@ export function App() {
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/announcements" element={<AnnouncementsPage />} />
         <Route path="/announcements/:seq/questions" element={<QuestionsPage />} />
+        <Route path="/my-profile" element={<MyProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

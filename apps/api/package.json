@@ -18,6 +18,7 @@
     "@nestjs/mongoose": "^10.0.6",
     "@nestjs/platform-express": "^10.3.8",
     "@nestjs/schedule": "^4.0.2",
+    "@nestjs/swagger": "^8.1.1",
     "mongoose": "^8.4.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"

@@ -2,7 +2,7 @@ import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedroc
 import { AnalysisResult } from './types';
 
 const bedrock = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
-const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'us.anthropic.claude-opus-4-0-20250514';
+const MODEL_ID = process.env.BEDROCK_MODEL_ID || 'us.anthropic.claude-sonnet-4-6';
 
 const SYSTEM_PROMPT = `당신은 SH 서울주택도시공사의 임대/분양 공고문 PDF를 분석하는 전문가입니다.
 
