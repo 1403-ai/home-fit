@@ -12,10 +12,12 @@ import {
   getProfileKeyLabel,
   formatProfileAnswer,
 } from '../utils/profileQAMapper';
+import { formatNumberWithComma, parseCommaNumber } from '../utils/number-input';
+import { MyInfoPanel } from '../components/MyInfoPanel';
 import type { UserProfile } from '../types/profile';
 import './QuestionsPage.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://www.homefit1403.site/api';
+const API_BASE_URL = 'https://www.homefit1403.site/api';
 
 interface SkippedQuestion {
   stateId: string;
@@ -192,8 +194,8 @@ export function QuestionsPage() {
 
   function handleNumberSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const value = Number(numberInput);
-    if (!Number.isNaN(value)) {
+    const value = parseCommaNumber(numberInput);
+    if (!Number.isNaN(value) && numberInput !== '') {
       handleAnswer(value);
     }
   }
@@ -339,162 +341,177 @@ export function QuestionsPage() {
   // Question state
   if (!isQuestionState(currentState)) return null;
 
+  // Get current question's profile_key for highlighting in the panel
+  const currentProfileKey = currentState.profile_key ?? undefined;
+
   return (
-    <main className="questions-page" data-testid="questions-page">
-      {/* Top Navigation */}
-      <nav className="questions-top-nav">
-        <Link
-          to="/announcements"
-          className="btn-secondary"
-          data-testid="questions-to-list"
-        >
-          ← 목록으로
-        </Link>
-      </nav>
-
-      {/* Profile Auto-Skip Summary */}
-      {skippedQuestions.length > 0 && showSkippedSummary && (
-        <div className="skipped-summary" data-testid="skipped-summary">
-          <div className="skipped-summary-header">
-            <span className="skipped-summary-icon">👤</span>
-            <strong>프로필에서 자동 적용된 정보</strong>
-            <button
-              type="button"
-              className="skipped-summary-close"
-              onClick={() => setShowSkippedSummary(false)}
-              aria-label="닫기"
-            >
-              ×
-            </button>
-          </div>
-          <ul className="skipped-summary-list">
-            {skippedQuestions.map((sq, idx) => (
-              <li key={sq.stateId}>
-                <span className="skipped-label">
-                  {getProfileKeyLabel(sq.profileKey)}
-                </span>
-                <span className="skipped-value">
-                  {formatProfileAnswer(sq.profileKey, sq.answer)}
-                </span>
-                <button
-                  type="button"
-                  className="skipped-reenter-btn"
-                  onClick={() => handleReenterSkipped(idx)}
-                  data-testid={`reenter-${sq.profileKey}`}
-                >
-                  직접 입력
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Progress Bar */}
-      <div className="questions-progress" data-testid="questions-progress">
-        <div
-          className="questions-progress-bar"
-          style={{ width: `${progress}%` }}
-          role="progressbar"
-          aria-valuenow={questionIndex}
-          aria-valuemin={0}
-          aria-valuemax={machine.meta.total_questions}
-        />
-        <span className="questions-progress-text">
-          {questionIndex + 1} / {machine.meta.total_questions}
-        </span>
-      </div>
-
-      {/* Flash Card */}
-      <div className="questions-card" data-testid="questions-card">
-        <p className="questions-text" data-testid="questions-text">
-          {currentState.text}
-        </p>
-
-        {/* Boolean Input */}
-        {currentState.input === 'boolean' && (
-          <div className="questions-input-group" data-testid="input-boolean">
-            <button
-              type="button"
-              className="btn-answer"
-              onClick={() => handleAnswer(true)}
-              data-testid="answer-yes"
-            >
-              예
-            </button>
-            <button
-              type="button"
-              className="btn-answer"
-              onClick={() => handleAnswer(false)}
-              data-testid="answer-no"
-            >
-              아니오
-            </button>
-          </div>
-        )}
-
-        {/* Number Input */}
-        {currentState.input === 'number' && (
-          <form
-            className="questions-input-group number-input-group"
-            onSubmit={handleNumberSubmit}
-            data-testid="input-number"
+    <div className="questions-layout" data-testid="questions-layout">
+      <main className="questions-page" data-testid="questions-page">
+        {/* Top Navigation */}
+        <nav className="questions-top-nav">
+          <Link
+            to="/announcements"
+            className="btn-secondary"
+            data-testid="questions-to-list"
           >
-            <div className="number-input-wrapper">
-              <input
-                type="number"
-                className="number-input"
-                value={numberInput}
-                onChange={(e) => setNumberInput(e.target.value)}
-                placeholder="숫자를 입력하세요"
-                autoFocus
-                data-testid="number-input-field"
-              />
-              {currentState.unit && (
-                <span className="number-unit">{currentState.unit}</span>
-              )}
-            </div>
-            <button
-              type="submit"
-              className="btn-answer btn-submit"
-              disabled={numberInput === '' || Number.isNaN(Number(numberInput))}
-              data-testid="number-submit"
-            >
-              다음
-            </button>
-          </form>
-        )}
+            ← 목록으로
+          </Link>
+        </nav>
 
-        {/* Choice Input */}
-        {currentState.input === 'choice' && currentState.options && (
-          <div className="questions-input-group choice-group" data-testid="input-choice">
-            {currentState.options.map((option) => (
+        {/* Profile Auto-Skip Summary */}
+        {skippedQuestions.length > 0 && showSkippedSummary && (
+          <div className="skipped-summary" data-testid="skipped-summary">
+            <div className="skipped-summary-header">
+              <span className="skipped-summary-icon">👤</span>
+              <strong>프로필에서 자동 적용된 정보</strong>
               <button
-                key={option}
                 type="button"
-                className="btn-answer btn-choice"
-                onClick={() => handleAnswer(option)}
-                data-testid={`choice-${option}`}
+                className="skipped-summary-close"
+                onClick={() => setShowSkippedSummary(false)}
+                aria-label="닫기"
               >
-                {option}
+                ×
               </button>
-            ))}
+            </div>
+            <ul className="skipped-summary-list">
+              {skippedQuestions.map((sq, idx) => (
+                <li key={sq.stateId}>
+                  <span className="skipped-label">
+                    {getProfileKeyLabel(sq.profileKey)}
+                  </span>
+                  <span className="skipped-value">
+                    {formatProfileAnswer(sq.profileKey, sq.answer)}
+                  </span>
+                  <button
+                    type="button"
+                    className="skipped-reenter-btn"
+                    onClick={() => handleReenterSkipped(idx)}
+                    data-testid={`reenter-${sq.profileKey}`}
+                  >
+                    직접 입력
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-      </div>
 
-      {/* Navigation */}
-      <div className="questions-nav">
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={handleBack}
-          disabled={history.length === 0}
-          data-testid="questions-back-btn"
-        >
-          ← 이전
-        </button>
-      </div>
-    </main>
+        {/* Progress Bar */}
+        <div className="questions-progress" data-testid="questions-progress">
+          <div
+            className="questions-progress-bar"
+            style={{ width: `${progress}%` }}
+            role="progressbar"
+            aria-valuenow={questionIndex}
+            aria-valuemin={0}
+            aria-valuemax={machine.meta.total_questions}
+          />
+          <span className="questions-progress-text">
+            {questionIndex + 1} / {machine.meta.total_questions}
+          </span>
+        </div>
+
+        {/* Flash Card */}
+        <div className="questions-card" data-testid="questions-card">
+          <p className="questions-text" data-testid="questions-text">
+            {currentState.text}
+          </p>
+
+          {/* Boolean Input */}
+          {currentState.input === 'boolean' && (
+            <div className="questions-input-group" data-testid="input-boolean">
+              <button
+                type="button"
+                className="btn-answer"
+                onClick={() => handleAnswer(true)}
+                data-testid="answer-yes"
+              >
+                예
+              </button>
+              <button
+                type="button"
+                className="btn-answer"
+                onClick={() => handleAnswer(false)}
+                data-testid="answer-no"
+              >
+                아니오
+              </button>
+            </div>
+          )}
+
+          {/* Number Input */}
+          {currentState.input === 'number' && (
+            <form
+              className="questions-input-group number-input-group"
+              onSubmit={handleNumberSubmit}
+              data-testid="input-number"
+            >
+              <div className="number-input-wrapper">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  className="number-input"
+                  value={numberInput}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/[^0-9,]/g, '');
+                    const num = parseCommaNumber(raw);
+                    setNumberInput(num === 0 && raw !== '0' ? raw : formatNumberWithComma(num));
+                  }}
+                  placeholder="숫자를 입력하세요"
+                  autoFocus
+                  data-testid="number-input-field"
+                />
+                {currentState.unit && (
+                  <span className="number-unit">{currentState.unit}</span>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="btn-answer btn-submit"
+                disabled={numberInput === '' || parseCommaNumber(numberInput) === 0 && numberInput !== '0'}
+                data-testid="number-submit"
+              >
+                다음
+              </button>
+            </form>
+          )}
+
+          {/* Choice Input */}
+          {currentState.input === 'choice' && currentState.options && (
+            <div className="questions-input-group choice-group" data-testid="input-choice">
+              {currentState.options.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className="btn-answer btn-choice"
+                  onClick={() => handleAnswer(option)}
+                  data-testid={`choice-${option}`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Navigation */}
+        <div className="questions-nav">
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleBack}
+            disabled={history.length === 0}
+            data-testid="questions-back-btn"
+          >
+            ← 이전
+          </button>
+        </div>
+      </main>
+
+      {/* Side Panel - My Info */}
+      <aside className="questions-sidebar">
+        <MyInfoPanel currentProfileKey={currentProfileKey} />
+      </aside>
+    </div>
   );
 }

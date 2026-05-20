@@ -21,8 +21,8 @@ export function Step3Assets({ profile, errors, onChange, onCarChange }: Step3Ass
         </label>
         <input
           id="totalAssets"
-          type="number"
-          min={0}
+          type="text"
+          inputMode="numeric"
           value={displayNumberValue(profile.totalAssets)}
           onChange={(e) => onChange('totalAssets', parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
@@ -78,8 +78,8 @@ export function Step3Assets({ profile, errors, onChange, onCarChange }: Step3Ass
           </label>
           <input
             id="carValue"
-            type="number"
-            min={0}
+            type="text"
+            inputMode="numeric"
             value={displayNumberValue(profile.carValue)}
             onChange={(e) => onChange('carValue', parseNumberInput(e.target.value))}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
@@ -103,8 +103,8 @@ export function Step3Assets({ profile, errors, onChange, onCarChange }: Step3Ass
         </label>
         <input
           id="totalIncome"
-          type="number"
-          min={0}
+          type="text"
+          inputMode="numeric"
           value={displayNumberValue(profile.totalIncome)}
           onChange={(e) => onChange('totalIncome', parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border px-3 py-2"
