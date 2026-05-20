@@ -242,7 +242,7 @@ export async function fetchAnnouncementDetail(nttId: string): Promise<Announceme
   const attachments = dedupeAttachments([
     ...parseInnorixDownList(html),
     ...parseDirectAttachmentLinks($),
-  ]);
+  ]).filter((attachment) => isTargetPdfFile(attachment.fileName));
 
   console.log(`[crawler] seq=${nttId}: found ${attachments.length} PDF attachments`);
 
@@ -325,6 +325,10 @@ function dedupeAttachments(attachments: AttachmentInfo[]): AttachmentInfo[] {
 function isPdfFile(fileName: string, urlOrOnclick: string): boolean {
   const lower = (fileName + urlOrOnclick).toLowerCase();
   return lower.includes('.pdf');
+}
+
+function isTargetPdfFile(fileName: string): boolean {
+  return fileName.includes('공고');
 }
 
 function sanitizeFileName(name: string): string {
