@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockAnnouncements } from '../mocks/announcements';
-import type { StatusFilter } from '../types/announcement';
+import type { AnnouncementSummary, StatusFilter } from '../types/announcement';
 import { filterByStatus } from '../utils/filterAnnouncements';
 import './AnnouncementsPage.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 const STATUS_FILTERS: StatusFilter[] = ['전체', '진행중', '예정'];
 
 function formatDateRange(start: string | null, end: string | null): string {
@@ -15,9 +15,48 @@ function formatDateRange(start: string | null, end: string | null): string {
 }
 
 export function AnnouncementsPage() {
+  const [announcements, setAnnouncements] = useState<AnnouncementSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<StatusFilter>('전체');
-  const filtered = filterByStatus(mockAnnouncements, activeFilter);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchAnnouncements() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/announcements`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
+        const data = (await response.json()) as AnnouncementSummary[];
+        setAnnouncements(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void fetchAnnouncements();
+  }, []);
+
+  const filtered = filterByStatus(announcements, activeFilter);
+
+  if (loading) {
+    return (
+      <main className="announcements-page" data-testid="announcements-page">
+        <p className="announcements-loading">공고 목록을 불러오는 중...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="announcements-page" data-testid="announcements-page">
+        <p className="announcements-error">오류: {error}</p>
+      </main>
+    );
+  }
 
   return (
     <main className="announcements-page" data-testid="announcements-page">
@@ -50,7 +89,7 @@ export function AnnouncementsPage() {
       <ul className="announcements-list" data-testid="announcements-list">
         {filtered.map((item) => (
           <li
-            key={item.seq}
+            key={item._id}
             className="announcement-item clickable"
             data-testid={`announcement-item-${item.seq}`}
             onClick={() => navigate(`/announcements/${item.seq}/questions`)}
@@ -72,22 +111,32 @@ export function AnnouncementsPage() {
             </div>
 
             <div className="announcement-meta">
-              <span className="badge housing-badge">{item.housing_type}</span>
-              <span
-                className={`badge supply-badge supply-${item.supply_category === '임대' ? 'rent' : 'sale'}`}
-              >
-                {item.supply_category}
-              </span>
+              {item.housing_type && (
+                <span className="badge housing-badge">{item.housing_type}</span>
+              )}
+              {item.supply_category && (
+                <span
+                  className={`badge supply-badge supply-${item.supply_category === '임대' ? 'rent' : item.supply_category === '분양' ? 'sale' : 'other'}`}
+                >
+                  {item.supply_category}
+                </span>
+              )}
               <span className="meta-separator" aria-hidden="true">
                 ·
               </span>
               <span className="announcement-date">
                 {formatDateRange(item.application_start, item.application_end)}
               </span>
-              <span className="meta-separator" aria-hidden="true">
-                ·
-              </span>
-              <span className="announcement-units">{item.unit_count}세대</span>
+              {item.unit_count != null && (
+                <>
+                  <span className="meta-separator" aria-hidden="true">
+                    ·
+                  </span>
+                  <span className="announcement-units">
+                    {item.unit_count}세대
+                  </span>
+                </>
+              )}
             </div>
           </li>
         ))}
