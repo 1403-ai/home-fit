@@ -1,4 +1,5 @@
 import { type UserProfile, type FormErrors } from '../../types/profile';
+import { displayNumberValue, parseNumberInput } from '../../utils/number-input';
 
 interface Step3AssetsProps {
   profile: UserProfile;
@@ -22,8 +23,8 @@ export function Step3Assets({ profile, errors, onChange, onCarChange }: Step3Ass
           id="totalAssets"
           type="number"
           min={0}
-          value={profile.totalAssets}
-          onChange={(e) => onChange('totalAssets', Number(e.target.value))}
+          value={displayNumberValue(profile.totalAssets)}
+          onChange={(e) => onChange('totalAssets', parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
           data-testid="step3-total-assets"
         />
@@ -79,8 +80,8 @@ export function Step3Assets({ profile, errors, onChange, onCarChange }: Step3Ass
             id="carValue"
             type="number"
             min={0}
-            value={profile.carValue}
-            onChange={(e) => onChange('carValue', Number(e.target.value))}
+            value={displayNumberValue(profile.carValue)}
+            onChange={(e) => onChange('carValue', parseNumberInput(e.target.value))}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
             data-testid="step3-car-value"
           />
@@ -104,8 +105,8 @@ export function Step3Assets({ profile, errors, onChange, onCarChange }: Step3Ass
           id="totalIncome"
           type="number"
           min={0}
-          value={profile.totalIncome}
-          onChange={(e) => onChange('totalIncome', Number(e.target.value))}
+          value={displayNumberValue(profile.totalIncome)}
+          onChange={(e) => onChange('totalIncome', parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
           data-testid="step3-total-income"
         />

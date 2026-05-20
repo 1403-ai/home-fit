@@ -1,4 +1,5 @@
 import { type UserProfile, type MarriageStatus, type MinorChild, type FormErrors } from '../../types/profile';
+import { displayNumberValue, parseNumberInput } from '../../utils/number-input';
 
 interface Step2HouseholdProps {
   profile: UserProfile;
@@ -35,8 +36,8 @@ export function Step2Household({
           id="householdSize"
           type="number"
           min={1}
-          value={profile.householdSize}
-          onChange={(e) => onChange('householdSize', Number(e.target.value))}
+          value={displayNumberValue(profile.householdSize)}
+          onChange={(e) => onChange('householdSize', parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
           data-testid="step2-household-size"
         />
@@ -125,8 +126,8 @@ export function Step2Household({
           id="minorChildrenCount"
           type="number"
           min={0}
-          value={profile.minorChildrenCount}
-          onChange={(e) => onMinorChildrenCountChange(Number(e.target.value))}
+          value={displayNumberValue(profile.minorChildrenCount)}
+          onChange={(e) => onMinorChildrenCountChange(parseNumberInput(e.target.value))}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border px-3 py-2"
           data-testid="step2-minor-children-count"
         />
