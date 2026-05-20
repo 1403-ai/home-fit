@@ -23,6 +23,11 @@ export function GNB() {
       to: '/announcements',
       testId: 'gnb-announcements-link',
     },
+    {
+      label: '용어 퀴즈',
+      to: '/glossary',
+      testId: 'gnb-glossary-link',
+    },
   ];
 
   function isActive(path: string): boolean {
