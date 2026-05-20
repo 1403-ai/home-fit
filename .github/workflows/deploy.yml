@@ -44,6 +44,7 @@ jobs:
           context: .
           file: apps/api/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/home-fit-ai-api:${{ env.IMAGE_TAG }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/home-fit-ai-api:latest
@@ -54,6 +55,7 @@ jobs:
           context: .
           file: infra/nginx/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           build-args: |
             VITE_API_BASE_URL=/api
             NGINX_CONF=default.prod.conf
